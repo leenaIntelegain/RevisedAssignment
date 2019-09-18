@@ -1,0 +1,43 @@
+{% extends "foodcourt.html" %}
+
+{% block content %}
+
+{% if order %}
+<h2>
+	Your Orders
+</h2>
+
+<table id="cart" class="table table-bordered table-hover">
+	<tr class="header" style="background-color: #5AC8FA">
+	    <th>Product</th>
+        <th>Quantity</th>
+        <th>Unit Price</th>
+        <th>Price</th>
+	</tr>
+	{% csrf_token %}
+	{% for item in order %}
+		
+		    <tr>
+		        <td>{{ item.name }}</td>
+		        <td>
+                     {{ item.quantity }}
+                </td>		         
+		        <td> {{ item.unit_price }} </td>
+			    <td> {{ item.price }} </td>
+		    </tr>
+
+	{% endfor %}
+
+	<tr style="background-color: #5AC8FA">
+        <td><b>Total</b></td>
+		<td colspan="2"></td>
+		<td colspan="num"><b>RS. {{ total_price }}</b></td>
+	</tr>
+</table>
+{% else %}
+		<p>There are no orders present.</p>
+		<p>For going to food court please click on this <a href="{% url 'foodcourt' %}">Home</a></p>
+{% endif %}
+
+{% endblock %}
+

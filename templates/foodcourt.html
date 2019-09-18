@@ -1,0 +1,101 @@
+{% extends "home.html"  %}
+
+<div class="container-fluid">
+
+<div id="content">
+  {% block content %}
+    <h1>Food Court</h1>
+    <p>Welcome to Food Court, a website developed by <em>Intelegain</em>!</p>
+
+    <p><a href="{% url 'order_details' %}">Check your orders</a></p>
+
+    <form action="{% url 'search_restaurants' %}" method="get">
+      <!-- {% csrf_token %} -->
+      <p>Search Restaurants:</p>
+      <div class="form-inline">
+      <input type="text" id="search" class="form-control" name="search" placeholder="Search..">
+      <button type="submit" class="btn btn-success">Submit</button>
+      </div>
+
+      {% if restaurants %}
+        <table id="myTable" class="table table-bordered table-hover">
+          <tr class="header">
+            <th style="width:60%;">Restaurant Name</th>
+            <th style="width:40%;">Image</th>
+          </tr>
+          {% for each_restaurants in restaurants %}
+               <tr class="restaurant" id="{{ each_restaurants.restaurant.id }}" >
+                <td>{{each_restaurants.restaurant.name}}</td>
+                <td><img src={{each_restaurants.restaurant.thumb}} width="100"></td>
+              </tr>
+          {% endfor %}
+
+          <!-- <div class="pagination">
+
+            <span class="step-links">
+
+                {% if pagination.previous %}
+
+
+                    <li><a href="?search={{ pagination.search }}&page=1">&laquo; first</a></li>
+                    <li><a href="?search={{ pagination.search }}&page={{ pagination.previous }}">previous</a></li>
+
+                {% endif %}
+
+                <span class="current">
+
+                    Page {{ pagination.current_page }} of {{ pagination.total_pages }}.
+
+                </span>
+
+                {% if pagination.next %}
+
+                    <li><a href='?search={{ pagination.search }}&page={{ pagination.next }}'>next</a></li>
+                    <li><a href="?search={{ pagination.search }}&page={{ pagination.total_pages }}">last &raquo;</a></li>
+
+                {% endif %}
+
+            </span>
+
+          </div> -->
+
+          <div class="row">
+            <div class="col-sm-6">
+              Page {{ pagination.current_page }} of {{ pagination.total_pages }}.
+            </div>
+            <div class="col-sm-6 text-right">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination" style="margin: 0 0 15px;">
+                     
+                      <li><a href="?search={{ pagination.search }}&page=1">&laquo; first</a></li>
+                      <li><a href="?search={{ pagination.search }}&page={{ pagination.previous }}">previous</a></li>
+
+                      <li><a href='?search={{ pagination.search }}&page={{ pagination.next }}'>next</a></li>
+                      <li><a href="?search={{ pagination.search }}&page={{ pagination.total_pages }}">last &raquo;</a></li>
+
+                    </ul>
+              </nav>
+            </div>
+          </div>
+
+        </table>
+      {% endif %}
+      {% if restaurant_details %}
+        <p>address : {{ restaurant_details.location.address }}</p>
+      {% endif %}
+
+    </form>
+    {% if error_message %}<p><strong>{{ error_message}}</strong></p>{% endif %}
+  {% endblock %}
+</div>
+
+<script>
+  $(".restaurant").on('click', function(){
+    var res_id = $(this).attr('id');
+    window.location.href = '/foodcourt/restaurant-details/?res_id=' + res_id;
+  });
+</script>
+</div>
+<div id="footer">
+  {% block footer %}{% endblock %}
+</div>

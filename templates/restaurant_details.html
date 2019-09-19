@@ -35,7 +35,7 @@ p {
 
 {% if menu_details %}
 
- <form action="{% url "cart_add" %}" id="cartForm" method="post" class="text-right">
+ <form action="{% url "cart_add" %}" id="cartForm" method="post">
  <button type="submit" id="gotocart" class="btn btn-success mr-15">Go To Cart</button>
 {% for each_menu in menu_details %}
 
@@ -44,8 +44,8 @@ p {
      
 <div class="row">
 <div class="col-sm-6">
-      <h4>{{ each_menu.name }}</h4>
-                            <h6>Category <a href="{{ product.category.get_absolute_url }}">{{ each_menu.category }}</a></h6>
+      <h4><b>{{ each_menu.name }}</b></h4>
+                            <h6>Category: <a href="{{ product.category.get_absolute_url }}">{{ each_menu.category }}</a></h6>
                             <p class="text-muted">Price/Unit: RS. {{ each_menu.price }}</p>
 </div>
 <div class="col-sm-6 text-right">
@@ -176,46 +176,13 @@ p {
           }
     });
 
-  // $("#gotocart").on('click', function(){
-  //   alert(products);
-  //   var el = document.getElementsByName("csrfmiddlewaretoken");
-  //   csrf_value = el[0].getAttribute("value");
- 
-  //   addCart(products);
-  //   // var res_id = $(this).attr('id');
-  //   // window.location.href = '/foodcourt/cart-add', products;
-  //   // $.redirect('/foodcourt/cart-add', products);
-  // });
-
-  // function addCart(data){// pass your data in method
-
-  //    $.ajax({
-  //          type: "POST",
-  //          url: "http://localhost:8000/foodcourt/cart-add",
-  //          data: JSON.stringify(data),// now data come in this function
-  //          contentType: "application/json; charset=utf-8",
-  //          crossDomain: true,
-  //          dataType: "json",
-  //          success: function (data, status, jqXHR) {
-
-  //              alert("success");// write success in " "
-  //          },
-
-  //          error: function (jqXHR, status) {
-  //              // error handler
-  //              console.log(jqXHR);
-  //              alert('fail' + status.code);
-  //          }
-  //       });
-  // }
-
   var frm = $('#cartForm');
   frm.submit(function () {
-    console.log("ttttttttttttttttttttt", products);
+    
         $.ajax({
             type: frm.attr('method'),
             url: frm.attr('action'),
-            data: {data:JSON.stringify(products)},
+            data: {data:JSON.stringify(products), restaurant: {{ restaurant_id }}},
             success: function (data) {
               console.log(data);
               window.location.href = '/foodcourt/cart-details/?cart_id=' + data;

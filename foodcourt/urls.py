@@ -29,7 +29,12 @@ urlpatterns = [
     	name='get_foodmenu_details'),
     # url(r'^add/(?P<product_id>\d+)/$', cart_add, name='cart_add'),
     url(r'^foodcourt/cart-add', cart_add, name='cart_add'),
-    url(r'^foodcourt/cart-details/(?P<cart_id>\d+)/$', cart_details, name='cart_details'),
+    url(
+        r'foodcourt/cart-details',
+        cart_details,
+        name='cart_details'
+    ),
+    # url(r'^foodcourt/cart-details/(?P<id>\d+)/$', cart_details, name='cart_details'),
     url(r'^foodcourt/place-order/(?P<cart_id>\d+)/$', place_order, name='place_order'),
     url(r'^foodcourt/order-details', order_details, name='order_details'),
     url(r'^foodcourt/signup', user_signup, name='user_signup'),

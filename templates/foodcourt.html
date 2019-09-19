@@ -7,8 +7,6 @@
     <h1>Food Court</h1>
     <p>Welcome to Food Court, a website developed by <em>Intelegain</em>!</p>
 
-    <p><a href="{% url 'order_details' %}">Check your orders</a></p>
-
     <form action="{% url 'search_restaurants' %}" method="get">
       <!-- {% csrf_token %} -->
       <p>Search Restaurants:</p>
@@ -29,35 +27,6 @@
                 <td><img src={{each_restaurants.restaurant.thumb}} width="100"></td>
               </tr>
           {% endfor %}
-
-          <!-- <div class="pagination">
-
-            <span class="step-links">
-
-                {% if pagination.previous %}
-
-
-                    <li><a href="?search={{ pagination.search }}&page=1">&laquo; first</a></li>
-                    <li><a href="?search={{ pagination.search }}&page={{ pagination.previous }}">previous</a></li>
-
-                {% endif %}
-
-                <span class="current">
-
-                    Page {{ pagination.current_page }} of {{ pagination.total_pages }}.
-
-                </span>
-
-                {% if pagination.next %}
-
-                    <li><a href='?search={{ pagination.search }}&page={{ pagination.next }}'>next</a></li>
-                    <li><a href="?search={{ pagination.search }}&page={{ pagination.total_pages }}">last &raquo;</a></li>
-
-                {% endif %}
-
-            </span>
-
-          </div> -->
 
           <div class="row">
             <div class="col-sm-6">

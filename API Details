@@ -431,6 +431,42 @@ Response for POST:
     "total_price": 218
 }
 
+#################################################################################################################################
+API Name: Menu List
+Description: Menu List
+URL: /orders/
+GET/POST/PUT/DELETE: GET
+Headers (with Sample): -
+Body (for post - with Sample): -
+Response:
+[
+    {
+        "id": 241,
+        "name": "Salted Fries",
+        "price": "89.00",
+        "description": ""
+    },
+    {
+        "id": 242,
+        "name": "Piri Piri Fries",
+        "price": "99.00",
+        "description": ""
+    },
+    {
+        "id": 243,
+        "name": "Chinese Schezwan",
+        "price": "109.00",
+        "description": ""
+    },
+    {
+        "id": 244,
+        "name": "Mexican Salsa",
+        "price": "109.00",
+        "description": ""
+    }
+]
+
+
 
 
 

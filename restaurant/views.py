@@ -24,6 +24,7 @@ from rest_framework.status import (
     HTTP_404_NOT_FOUND,
     HTTP_200_OK
 )
+from rest_framework import generics
 
 
 # Signup View
@@ -312,6 +313,17 @@ def login(request):
     token, _ = Token.objects.get_or_create(user=user)
     return Response({'token': token.key},
                     status=HTTP_200_OK)
+
+class DishListView(generics.ListAPIView):
+    """
+    Endpoint for current user creator list
+    """
+    serializer_class = DishSerializer
+    permission_classes = [AllowAny]
+
+    def get_queryset(self):
+        return Dish.objects.all().order_by('id')
+
 
 class CartView(APIView):
     # renderer_classes = [TemplateHTMLRenderer]

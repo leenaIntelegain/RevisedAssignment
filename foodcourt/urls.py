@@ -66,4 +66,10 @@ urlpatterns = [
         CartView.as_view(),
         name='cart'
     ),
+
+    url(
+        r'dish-list/$',
+        DishListView.as_view(),
+        name='dish-list'
+    ),
 ]

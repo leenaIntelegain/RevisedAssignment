@@ -318,6 +318,19 @@ ALTER SEQUENCE public.auth_user_user_permissions_id_seq OWNED BY public.auth_use
 
 
 --
+-- Name: authtoken_token; Type: TABLE; Schema: public; Owner: intelegain
+--
+
+CREATE TABLE public.authtoken_token (
+    key character varying(40) NOT NULL,
+    created timestamp with time zone NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+ALTER TABLE public.authtoken_token OWNER TO intelegain;
+
+--
 -- Name: django_admin_log; Type: TABLE; Schema: public; Owner: intelegain
 --
 
@@ -1074,6 +1087,9 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 58	Can view user	2	view_user
 59	Can view content type	5	view_contenttype
 60	Can view session	6	view_session
+61	Can add Token	19	add_token
+62	Can change Token	19	change_token
+63	Can delete Token	19	delete_token
 \.
 
 
@@ -1081,7 +1097,7 @@ COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
 -- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: intelegain
 --
 
-SELECT pg_catalog.setval('public.auth_permission_id_seq', 60, true);
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 63, true);
 
 
 --
@@ -1090,7 +1106,7 @@ SELECT pg_catalog.setval('public.auth_permission_id_seq', 60, true);
 
 COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
 10	pbkdf2_sha256$36000$tWQVElLQyQIg$xdh3WMomPpdGWr4taz0jvCazH/f9KMcHwx3l1VS0y8E=	2019-09-19 12:16:22.83971+05:30	f	lalita@intelegain.com			lalita@intelegain.com	f	t	2019-09-18 12:45:02.978515+05:30
-11	pbkdf2_sha256$36000$wLnXKUgiqNkZ$RF57n1LtVC91vOWuL3MSmWgpnialMlVWSCK6yiAzvus=	2019-09-19 13:39:21.112729+05:30	f	pranali.k@intelegain.com			pranali.k@intelegain.com	f	t	2019-09-19 12:25:34.231324+05:30
+11	pbkdf2_sha256$36000$wLnXKUgiqNkZ$RF57n1LtVC91vOWuL3MSmWgpnialMlVWSCK6yiAzvus=	2019-09-20 12:07:37.440911+05:30	f	pranali.k@intelegain.com			pranali.k@intelegain.com	f	t	2019-09-19 12:25:34.231324+05:30
 9	pbkdf2_sha256$36000$4XKIqY2qsnPr$8mNb/05Njin34HeGAlun/VBBJtUuxkjS9yCWstGn69Y=	2019-08-30 18:01:22.175288+05:30	f	lalita.s@intelegain.com			lalita.s@intelegain.com	f	t	2019-08-30 18:01:00.4136+05:30
 1	pbkdf2_sha256$36000$V6x50ErLI8Dj$CIcSLj8CVTIWR4YLHtijDDk5ZL0+YF1KfSXhI8525W4=	2019-08-31 12:04:15.785084+05:30	t	leena			leena.s@intelegain.com	t	t	2019-08-29 11:36:51.905819+05:30
 \.
@@ -1131,6 +1147,15 @@ COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
 --
 
 SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
+
+
+--
+-- Data for Name: authtoken_token; Type: TABLE DATA; Schema: public; Owner: intelegain
+--
+
+COPY public.authtoken_token (key, created, user_id) FROM stdin;
+b5d48f63d3d5039011d818494f2e163016c322eb	2019-09-20 11:57:15.717477+05:30	11
+\.
 
 
 --
@@ -1341,6 +1366,7 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 16	restaurant	order
 17	restaurant	cart
 18	restaurant	orderitems
+19	authtoken	token
 \.
 
 
@@ -1348,7 +1374,7 @@ COPY public.django_content_type (id, app_label, model) FROM stdin;
 -- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: intelegain
 --
 
-SELECT pg_catalog.setval('public.django_content_type_id_seq', 18, true);
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 19, true);
 
 
 --
@@ -1389,6 +1415,8 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 31	auth	0009_alter_user_last_name_max_length	2019-09-03 12:31:05+05:30
 32	auth	0010_alter_group_name_max_length	2019-09-03 12:31:05.315877+05:30
 33	auth	0011_update_proxy_permissions	2019-09-03 12:31:05.414436+05:30
+34	authtoken	0001_initial	2019-09-20 11:57:02.559034+05:30
+35	authtoken	0002_auto_20160226_1747	2019-09-20 11:57:03.178661+05:30
 \.
 
 
@@ -1396,7 +1424,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: intelegain
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 33, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 35, true);
 
 
 --
@@ -1404,6 +1432,7 @@ SELECT pg_catalog.setval('public.django_migrations_id_seq', 33, true);
 --
 
 COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
+vxmr6jsmy6w9c0o0eqk7k14krbep2pex	NzA5ZjliOWVjYjBhMzM5ZTcwODAzOTA0OWZiNjdiMzA2Y2ZkNDNjYzp7Il9hdXRoX3VzZXJfaWQiOiIxMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiYTBhNzM4OWZmZTllYTNkZDAxYmRkMzFjN2ZmOTBhOWU5NDU5NjQzYyJ9	2019-10-04 12:07:37.482872+05:30
 52iygw8hza9u1k3skmdvtlhle1jt7ull	ZGJkN2M4OGM5MGViNjIxNDEzOTNhMGFmNzczNmM5N2E3ZDBjMjNmYzqABJVAAgAAAAAAAH2UjARjYXJ0lH2UKIwDMjQxlH2UKIwFcHJpY2WUjAdkZWNpbWFslIwHRGVjaW1hbJSTlIwFODkuMDCUhZRSlIwIcXVhbnRpdHmUSwuMB3Byb2R1Y3SUjBVkamFuZ28uZGIubW9kZWxzLmJhc2WUjA5tb2RlbF91bnBpY2tsZZSTlIwKcmVzdGF1cmFudJSMBERpc2iUhpSFlFKUfZQojAhjYXRlZ29yeZSMEVNoYWtlIFNoYWtlIEZyaWVzlIwCaWSUS/GMBHVuaXSUjACUjAtkZXNjcmlwdGlvbpRoG4wEbmFtZZSMDFNhbHRlZCBGcmllc5SMCnJlc3RhdXJhbnSUSwGMD19kamFuZ29fdmVyc2lvbpSMBjEuMTEuNZSMBl9zdGF0ZZRoDowKTW9kZWxTdGF0ZZSTlCl9lJKUfZQojAJkYpSMB2RlZmF1bHSUjAZhZGRpbmeUiXVijAVwcmljZZRoCIwFODkuMDCUhZRSlHVijAt0b3RhbF9wcmljZZRoCIwGODkwLjAwlIWUUpR1jAMyNDKUfZQoaAVoCIwFOTkuMDCUhZRSlGgMSwRoDWgQaBFoEoaUhZRSlH2UKGgXjBFTaGFrZSBTaGFrZSBGcmllc5RoGUvyaBpoG2gcaBtoHYwPUGlyaSBQaXJpIEZyaWVzlGgfSwFoIIwGMS4xMS41lGgiaCQpfZSSlH2UKGgoaCloKol1YmgraAiMBTk5LjAwlIWUUpR1YmgvaAiMBjM5Ni4wMJSFlFKUdXVzLg==	2019-09-13 10:08:34.977317+05:30
 vx3a6vp3jsshv75pnmt430osjcmljvt5	YjA4ZjczZDYzZWQzZTY0OWE0OGVjNmRiNWE3OGQ2YmJmNDY5NTk4ODqABJWXAAAAAAAAAH2UKIwPX2F1dGhfdXNlcl9oYXNolIwoODFmOTJjMGM1M2QyYjk0ZDVjYTY2NzYzZGNiYmRkYzVkY2U5Zjg2MZSMEl9hdXRoX3VzZXJfYmFja2VuZJSMKWRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5klIwNX2F1dGhfdXNlcl9pZJSMATmUdS4=	2019-09-13 18:01:22.183656+05:30
 q88e1fx31iymap45bderu9um2t8nd6n7	Yjk4ODg4NDJiMTJhMjE5OGJjNzhjODAwMWRkN2VlZTk3NGI3NDhmNDqABJVdAAAAAAAAAH2UjARjYXJ0lH2UKIwDMjQylH2UKIwFcHJpY2WUjAU5OS4wMJSMCHF1YW50aXR5lEsBdYwDMjQxlH2UKIwFcHJpY2WUjAU4OS4wMJSMCHF1YW50aXR5lEsEdXVzLg==	2019-09-13 10:11:47.829653+05:30
@@ -1416,13 +1445,13 @@ w7yejtos9iy2amn4c03l4ddnouaohq60	MGEwMjkyM2VjZTVjYjc1YjZhNDUyNWUxNTIzYjk0NjRhMzY
 c8p45d6pnxfwem0utn7pxqhwq2jh2k6s	YTAwY2I5MzkwNTFkNDAzODJlNmM4YjI5MDNiYjQ2NWMxOGI0Y2M0ODqABJUgAgAAAAAAAH2UKIwEY2FydJR9lIwDMjQxlH2UKIwFcHJpY2WUjAdkZWNpbWFslIwHRGVjaW1hbJSTlIwFODkuMDCUhZRSlIwIcXVhbnRpdHmUSwKMC3RvdGFsX3ByaWNllGgIjAYxNzguMDCUhZRSlIwHcHJvZHVjdJSMFWRqYW5nby5kYi5tb2RlbHMuYmFzZZSMDm1vZGVsX3VucGlja2xllJOUjApyZXN0YXVyYW50lIwERGlzaJSGlIWUUpR9lCiMBHVuaXSUjACUjAZfc3RhdGWUaBKMCk1vZGVsU3RhdGWUk5QpfZSSlH2UKIwCZGKUjAdkZWZhdWx0lIwGYWRkaW5nlIl1YowCaWSUS/GMD19kamFuZ29fdmVyc2lvbpSMBjEuMTEuNZSMC2Rlc2NyaXB0aW9ulGgcaAVoCIwFODkuMDCUhZRSlIwIY2F0ZWdvcnmUjBFTaGFrZSBTaGFrZSBGcmllc5SMCnJlc3RhdXJhbnSUSwGMBG5hbWWUjAxTYWx0ZWQgRnJpZXOUdWJ1c4wNX2F1dGhfdXNlcl9pZJSMATGUjBJfYXV0aF91c2VyX2JhY2tlbmSUjClkamFuZ28uY29udHJpYi5hdXRoLmJhY2tlbmRzLk1vZGVsQmFja2VuZJSMD19hdXRoX3VzZXJfaGFzaJSMKDE5ZTE1N2I0NmIxOTNmMmQzMzc1NTlhNzczODdlZGYzNzRhZTdhMDOUdS4=	2019-09-13 10:43:39.61587+05:30
 x9uiy9s97szmdo41dpn7kyt4e9idzlnp	ZDk2ZGMyYTYzMzQ2YjM5OGQ1NGZlYjdhOTQ4NGJhZmMyYjZhZmM3YjqABJWIAQAAAAAAAH2UjARjYXJ0lH2UjAMyNDGUfZQojAt0b3RhbF9wcmljZZSMB2RlY2ltYWyUjAdEZWNpbWFslJOUjAYxNzguMDCUhZRSlIwFcHJpY2WUaAiMBTg5LjAwlIWUUpSMB3Byb2R1Y3SUjBVkamFuZ28uZGIubW9kZWxzLmJhc2WUjA5tb2RlbF91bnBpY2tsZZSTlIwKcmVzdGF1cmFudJSMBERpc2iUhpSFlFKUfZQojARuYW1llIwMU2FsdGVkIEZyaWVzlGgUSwGMAmlklEvxjAhjYXRlZ29yeZSMEVNoYWtlIFNoYWtlIEZyaWVzlIwEdW5pdJSMAJSMBl9zdGF0ZZRoEYwKTW9kZWxTdGF0ZZSTlCl9lJKUfZQojAZhZGRpbmeUiYwCZGKUjAdkZWZhdWx0lHVijAtkZXNjcmlwdGlvbpRoIIwFcHJpY2WUaAiMBTg5LjAwlIWUUpSMD19kamFuZ29fdmVyc2lvbpSMBjEuMTEuNZR1YowIcXVhbnRpdHmUSwJ1c3Mu	2019-09-13 11:55:18.378422+05:30
 qth5hmuog25zqrp0gbp1gxpu3g3mlkpj	MGEwMjkyM2VjZTVjYjc1YjZhNDUyNWUxNTIzYjk0NjRhMzY3ZGI3YTqABJUDAAAAAAAAAH2ULg==	2019-09-13 12:56:18.788736+05:30
+ecjkvshey41flefv1duhumidtvoctc0u	MTBjM2IyNTQ2Yzk0NzMzYTBhODBjY2I5OTExZTNiYmIzOGEyZWFiMTp7fQ==	2019-10-04 11:51:37.797267+05:30
 kad4g983ar1fjv4n22lsa0yic1ijng5w	YjkzZjg1OTQ5MzQzOTg4YWQ4NGRlNDNkNjg1MGI5NDdjMGFmZTllZjqABJVZAgAAAAAAAH2UjARjYXJ0lH2UKIwDMjQylH2UKIwFcHJpY2WUjAdkZWNpbWFslIwHRGVjaW1hbJSTlIwFOTkuMDCUhZRSlIwIcXVhbnRpdHmUSw2MC3RvdGFsX3ByaWNllGgIjAcxMjg3LjAwlIWUUpSMB3Byb2R1Y3SUjBVkamFuZ28uZGIubW9kZWxzLmJhc2WUjA5tb2RlbF91bnBpY2tsZZSTlIwKcmVzdGF1cmFudJSMBERpc2iUhpSFlFKUfZQojAVwcmljZZRoCIwFOTkuMDCUhZRSlIwPX2RqYW5nb192ZXJzaW9ulIwGMS4xMS41lIwEdW5pdJSMAJSMCGNhdGVnb3J5lIwRU2hha2UgU2hha2UgRnJpZXOUaBVLAYwCaWSUS/KMC2Rlc2NyaXB0aW9ulGgijARuYW1llIwPUGlyaSBQaXJpIEZyaWVzlIwGX3N0YXRllGgSjApNb2RlbFN0YXRllJOUKX2UkpR9lCiMAmRilIwHZGVmYXVsdJSMBmFkZGluZ5SJdWJ1YnWMAzI0MZR9lCiMBXByaWNllGgIjAU4OS4wMJSFlFKUjAhxdWFudGl0eZRLCYwLdG90YWxfcHJpY2WUaAiMBjgwMS4wMJSFlFKUjAdwcm9kdWN0lGgUaBVoFoaUhZRSlH2UKGgbaAiMBTg5LjAwlIWUUpRoH4wGMS4xMS41lGghaCJoI4wRU2hha2UgU2hha2UgRnJpZXOUaBVLAWglS/FoJmgiaCeMDFNhbHRlZCBGcmllc5RoKWgrKX2UkpR9lChoL2gwaDGJdWJ1YnV1cy4=	2019-09-12 19:45:04.400822+05:30
 tn5139eql30uagbj0h3micj5zjfi095k	NGZiOGE5YTk4OWRmYjk5OTM0MDJmNGMxYmQzNjNlMWE3ZmYyZTA0OTqABJU1AAAAAAAAAH2UjARjYXJ0lH2UjAMyNDGUfZQojAVwcmljZZSMBTg5LjAwlIwIcXVhbnRpdHmUSwF1c3Mu	2019-09-13 10:16:25.979738+05:30
 7u0ebr0uu5cha1sxifqqa8c4qfpqbog6	YTY3YjU2OTBjMGQ3MTU4YWY1ZjAzYzY2YWIyOGYxNTYyMGRkYjRmYzqABJWhAAAAAAAAAH2UKIwNX2F1dGhfdXNlcl9pZJSMATGUjA9fYXV0aF91c2VyX2hhc2iUjCgxOWUxNTdiNDZiMTkzZjJkMzM3NTU5YTc3Mzg3ZWRmMzc0YWU3YTAzlIwSX2F1dGhfdXNlcl9iYWNrZW5klIwzYWxsYXV0aC5hY2NvdW50LmF1dGhfYmFja2VuZHMuQXV0aGVudGljYXRpb25CYWNrZW5klHUu	2019-09-14 12:04:15.793485+05:30
 4pwlvcuve7h6d66ulh8gsg7igknww1mq	ZTY4MTgxZTJiOTU1YzM5ZmI4OTU0MmExMWMwMTA3YzRjOWI3MzI5ZjqABJXVBgAAAAAAAH2UjARjYXJ0lH2UjAMyNDGUfZQojBR1cGRhdGVfcXVhbnRpdHlfZm9ybZSMEHJlc3RhdXJhbnQuZm9ybXOUjBJDYXJ0QWRkUHJvZHVjdEZvcm2Uk5QpfZSSlH2UKIwHX2Vycm9yc5ROjAZmaWVsZHOUjAtjb2xsZWN0aW9uc5SMC09yZGVyZWREaWN0lJOUKVKUKIwIcXVhbnRpdHmUjBNkamFuZ28uZm9ybXMuZmllbGRzlIwQVHlwZWRDaG9pY2VGaWVsZJSTlCl9lJKUfZQojAp2YWxpZGF0b3JzlF2UjAxsYWJlbF9zdWZmaXiUTowQY3JlYXRpb25fY291bnRlcpRLIIwIbG9jYWxpemWUiYwJaGVscF90ZXh0lIwAlIwGY29lcmNllIwIYnVpbHRpbnOUjANpbnSUk5SMCHJlcXVpcmVklIiMBWxhYmVslE6MBndpZGdldJSMFGRqYW5nby5mb3Jtcy53aWRnZXRzlIwGU2VsZWN0lJOUKX2UkpR9lCiMBWF0dHJzlH2UjAdjaG9pY2VzlF2UKEsBjAExlIaUSwKMATKUhpRLA4wBM5SGlEsEjAE0lIaUSwWMATWUhpRLBowBNpSGlEsHjAE3lIaUSwiMATiUhpRLCYwBOZSGlEsKjAIxMJSGlEsLjAIxMZSGlEsMjAIxMpSGlEsNjAIxM5SGlEsOjAIxNJSGlEsPjAIxNZSGlEsQjAIxNpSGlEsRjAIxN5SGlEsSjAIxOJSGlEsTjAIxOZSGlEsUjAIyMJSGlEsVjAIyMZSGlEsWjAIyMpSGlEsXjAIyM5SGlEsYjAIyNJSGlEsZjAIyNZSGlGWMC2lzX3JlcXVpcmVklIh1YowLZW1wdHlfdmFsdWWUaB+ME3Nob3dfaGlkZGVuX2luaXRpYWyUiYwIZGlzYWJsZWSUiYwHaW5pdGlhbJROjAhfY2hvaWNlc5RdlChoMmg0aDZoOGg6aDxoPmhAaEJoRGhGaEhoSmhMaE5oUGhSaFRoVmhYaFpoXGheaGBoYmWMDmVycm9yX21lc3NhZ2VzlH2UKGgkjBdkamFuZ28udXRpbHMuZnVuY3Rpb25hbJSMFF9sYXp5X3Byb3h5X3VucGlja2xllJOUKIwYZGphbmdvLnV0aWxzLnRyYW5zbGF0aW9ulIwIdWdldHRleHSUk5SMF1RoaXMgZmllbGQgaXMgcmVxdWlyZWQulIWUfZRoIYwDc3RylJOUdJRSlIwOaW52YWxpZF9jaG9pY2WUaG4oaHGMRVNlbGVjdCBhIHZhbGlkIGNob2ljZS4gJSh2YWx1ZSlzIGlzIG5vdCBvbmUgb2YgdGhlIGF2YWlsYWJsZSBjaG9pY2VzLpSFlH2UaHZ0lFKUdXVijAZ1cGRhdGWUaBOMDEJvb2xlYW5GaWVsZJSTlCl9lJKUfZQoaBldlGgbTmgcSyFoHmgfaGeJaB2JaCSJaCVOaGaJaCZoJ4wLSGlkZGVuSW5wdXSUk5QpfZSSlH2UKGgtfZRoY4l1YmhliWhqfZRoJGh4c3VidYwEZGF0YZR9lGgbjAE6lIwHYXV0b19pZJSMBWlkXyVzlIwLZXJyb3JfY2xhc3OUjBJkamFuZ28uZm9ybXMudXRpbHOUjAlFcnJvckxpc3SUk5SMCGlzX2JvdW5klImME19ib3VuZF9maWVsZHNfY2FjaGWUfZSMCHJlbmRlcmVylIwWZGphbmdvLmZvcm1zLnJlbmRlcmVyc5SMD0RqYW5nb1RlbXBsYXRlc5STlCl9lJKUjAVmaWxlc5R9lIwPZW1wdHlfcGVybWl0dGVklIloZ32UKGh/iGgSSwJ1dWKMB3Byb2R1Y3SUjBVkamFuZ28uZGIubW9kZWxzLmJhc2WUjA5tb2RlbF91bnBpY2tsZZSTlIwKcmVzdGF1cmFudJSMBERpc2iUhpSFlFKUfZQojA9fZGphbmdvX3ZlcnNpb26UjAYxLjExLjWUjAJpZJRL8YwIY2F0ZWdvcnmUjBFTaGFrZSBTaGFrZSBGcmllc5Rop0sBjAVwcmljZZSMB2RlY2ltYWyUjAdEZWNpbWFslJOUjAU4OS4wMJSFlFKUjAtkZXNjcmlwdGlvbpRoH4wEbmFtZZSMDFNhbHRlZCBGcmllc5SMBHVuaXSUaB+MBl9zdGF0ZZRopIwKTW9kZWxTdGF0ZZSTlCl9lJKUfZQojAZhZGRpbmeUiYwCZGKUjAdkZWZhdWx0lHVidWKMCHF1YW50aXR5lEsCjAVwcmljZZRotYwFODkuMDCUhZRSlIwLdG90YWxfcHJpY2WUaLWMBjE3OC4wMJSFlFKUdXNzLg==	2019-09-13 10:34:54.751144+05:30
 gu52hhsjvqp8tqsbqggedwnqf6vzkkde	ZTU0Mzc4MmI3OWE0M2E2NmUwYTFhMzYxNzQ5MTk3YzZiYTMwM2Y2ODqABJUNAAAAAAAAAH2UjARjYXJ0lH2Ucy4=	2019-09-13 11:12:55.924619+05:30
 drjrizv9yxsp9112s06yslpcm749ejhv	MGEwMjkyM2VjZTVjYjc1YjZhNDUyNWUxNTIzYjk0NjRhMzY3ZGI3YTqABJUDAAAAAAAAAH2ULg==	2019-09-13 12:21:19.259291+05:30
-b9lavq29iulnjsp2q2s9h8iz4sxk805c	NzA5ZjliOWVjYjBhMzM5ZTcwODAzOTA0OWZiNjdiMzA2Y2ZkNDNjYzp7Il9hdXRoX3VzZXJfaWQiOiIxMSIsIl9hdXRoX3VzZXJfYmFja2VuZCI6ImRqYW5nby5jb250cmliLmF1dGguYmFja2VuZHMuTW9kZWxCYWNrZW5kIiwiX2F1dGhfdXNlcl9oYXNoIjoiYTBhNzM4OWZmZTllYTNkZDAxYmRkMzFjN2ZmOTBhOWU5NDU5NjQzYyJ9	2019-10-03 13:39:21.154543+05:30
 \.
 
 
@@ -1448,6 +1477,7 @@ SELECT pg_catalog.setval('public.django_site_id_seq', 1, true);
 
 COPY public.restaurant_cart (id, total_price, restaurant, user_id) FROM stdin;
 4	801.00		9
+24	80.00	19195803	11
 \.
 
 
@@ -1455,7 +1485,7 @@ COPY public.restaurant_cart (id, total_price, restaurant, user_id) FROM stdin;
 -- Name: restaurant_cart_id_seq; Type: SEQUENCE SET; Schema: public; Owner: intelegain
 --
 
-SELECT pg_catalog.setval('public.restaurant_cart_id_seq', 22, true);
+SELECT pg_catalog.setval('public.restaurant_cart_id_seq', 24, true);
 
 
 --
@@ -1463,6 +1493,8 @@ SELECT pg_catalog.setval('public.restaurant_cart_id_seq', 22, true);
 --
 
 COPY public.restaurant_cartitems (id, quantity, price, items_id, user_id, cart_id) FROM stdin;
+43	1	30.00	411	11	24
+44	1	50.00	412	11	24
 4	9	801.00	241	9	4
 \.
 
@@ -1471,7 +1503,7 @@ COPY public.restaurant_cartitems (id, quantity, price, items_id, user_id, cart_i
 -- Name: restaurant_cartitems_id_seq; Type: SEQUENCE SET; Schema: public; Owner: intelegain
 --
 
-SELECT pg_catalog.setval('public.restaurant_cartitems_id_seq', 41, true);
+SELECT pg_catalog.setval('public.restaurant_cartitems_id_seq', 44, true);
 
 
 --
@@ -1682,6 +1714,7 @@ COPY public.restaurant_order (id, order_date, total_price, restaurant, user_id) 
 16	2019-09-19	129.00	18458436	11
 17	2019-09-19	297.00	19094260	11
 18	2019-09-19	89.00	16505344	11
+19	2019-09-20	218.00	18415754	11
 \.
 
 
@@ -1689,7 +1722,7 @@ COPY public.restaurant_order (id, order_date, total_price, restaurant, user_id) 
 -- Name: restaurant_order_id_seq; Type: SEQUENCE SET; Schema: public; Owner: intelegain
 --
 
-SELECT pg_catalog.setval('public.restaurant_order_id_seq', 18, true);
+SELECT pg_catalog.setval('public.restaurant_order_id_seq', 19, true);
 
 
 --
@@ -1720,6 +1753,7 @@ COPY public.restaurant_orderitems (id, quantity, price, items_id, order_id, user
 21	1	99.00	242	17	11
 22	1	109.00	243	17	11
 23	1	89.00	241	18	11
+24	2	218.00	243	19	11
 \.
 
 
@@ -1727,7 +1761,7 @@ COPY public.restaurant_orderitems (id, quantity, price, items_id, order_id, user
 -- Name: restaurant_orderitems_id_seq; Type: SEQUENCE SET; Schema: public; Owner: intelegain
 --
 
-SELECT pg_catalog.setval('public.restaurant_orderitems_id_seq', 23, true);
+SELECT pg_catalog.setval('public.restaurant_orderitems_id_seq', 24, true);
 
 
 --
@@ -1916,6 +1950,22 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 ALTER TABLE ONLY public.auth_user
     ADD CONSTRAINT auth_user_username_key UNIQUE (username);
+
+
+--
+-- Name: authtoken_token authtoken_token_pkey; Type: CONSTRAINT; Schema: public; Owner: intelegain
+--
+
+ALTER TABLE ONLY public.authtoken_token
+    ADD CONSTRAINT authtoken_token_pkey PRIMARY KEY (key);
+
+
+--
+-- Name: authtoken_token authtoken_token_user_id_key; Type: CONSTRAINT; Schema: public; Owner: intelegain
+--
+
+ALTER TABLE ONLY public.authtoken_token
+    ADD CONSTRAINT authtoken_token_user_id_key UNIQUE (user_id);
 
 
 --
@@ -2170,6 +2220,13 @@ CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (u
 
 
 --
+-- Name: authtoken_token_key_10f0b77e_like; Type: INDEX; Schema: public; Owner: intelegain
+--
+
+CREATE INDEX authtoken_token_key_10f0b77e_like ON public.authtoken_token USING btree (key varchar_pattern_ops);
+
+
+--
 -- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: intelegain
 --
 
@@ -2358,6 +2415,14 @@ ALTER TABLE ONLY public.auth_user_user_permissions
 
 ALTER TABLE ONLY public.auth_user_user_permissions
     ADD CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: authtoken_token authtoken_token_user_id_35299eff_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: intelegain
+--
+
+ALTER TABLE ONLY public.authtoken_token
+    ADD CONSTRAINT authtoken_token_user_id_35299eff_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
 
 
 --

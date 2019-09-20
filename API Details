@@ -1,0 +1,438 @@
+API Name: Login
+Description: User Authentication
+URL: /api/login
+GET/POST/PUT/DELETE: POST
+Headers (with Sample): 
+	{
+    	'content-type': "application/json"
+    }
+Body (for post - with Sample): 
+	{
+		"username": "pranali.k@intelegain.com",
+		"password": "admin@123"
+	}
+
+Response:
+{
+    "token": "b5d48f63d3d5039011d818494f2e163016c322eb"
+}
+
+#############################################################################################################################
+API Name: Restaurant Search
+Description: Restaurant search using third part api "https://developers.zomato.com/api/v2.1/restaurant"
+URL: /restaurant-search?search=coffee&page=1
+GET/POST/PUT/DELETE: GET
+Headers (with Sample): -
+Body (for post - with Sample): -
+Response: {
+    "restaurants": [
+        {
+            "restaurant": {
+                "R": {
+                    "has_menu_status": {
+                        "delivery": 1,
+                        "takeaway": -1
+                    },
+                    "res_id": 19195803
+                },
+                "apikey": "84fd63575a12f6a5537b8cf51215dca3",
+                "id": "19195803",
+                "name": "Slay Coffee",
+                "url": "https://www.zomato.com/mumbai/slay-coffee-mahakali?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                "location": {
+                    "address": "Gala 20, Madhuban Industrial Estatet, Near Holly Cross School, Mahakali, Mumbai",
+                    "locality": "Mahakali",
+                    "city": "Mumbai",
+                    "city_id": 3,
+                    "latitude": "19.1196730000",
+                    "longitude": "72.8600770000",
+                    "zipcode": "",
+                    "country_id": 1,
+                    "locality_verbose": "Mahakali, Mumbai"
+                },
+                "switch_to_order_menu": 0,
+                "cuisines": "Coffee, Beverages, Fast Food",
+                "timings": "11 AM to 11 PM",
+                "average_cost_for_two": 450,
+                "price_range": 1,
+                "currency": "Rs.",
+                "highlights": [
+                    "Dinner",
+                    "Cash",
+                    "Takeaway Available",
+                    "Debit Card",
+                    "Lunch",
+                    "Delivery",
+                    "Credit Card",
+                    "Outdoor Seating",
+                    "Digital Payments Accepted"
+                ],
+                "offers": [],
+                "opentable_support": 0,
+                "is_zomato_book_res": 0,
+                "mezzo_provider": "OTHER",
+                "is_book_form_web_view": 0,
+                "book_form_web_view_url": "",
+                "book_again_url": "",
+                "thumb": "https://b.zmtcdn.com/data/pictures/chains/7/19188447/18a0ce6806a89784e167bd2cb41856fe.jpg?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A",
+                "user_rating": {
+                    "aggregate_rating": "3.6",
+                    "rating_text": "Good",
+                    "rating_color": "9ACD32",
+                    "rating_obj": {
+                        "title": {
+                            "text": "NEW"
+                        },
+                        "bg_color": {
+                            "type": "grey",
+                            "tint": "500"
+                        }
+                    },
+                    "votes": "13",
+                    "custom_rating_text": "NEW",
+                    "custom_rating_text_background": "#89959B",
+                    "rating_tool_tip": "This restaurant is newly opened. The rating will appear once the restaurant completes 60 days in operation."
+                },
+                "all_reviews_count": 9,
+                "photos_url": "https://www.zomato.com/mumbai/slay-coffee-mahakali/photos?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1#tabtop",
+                "photo_count": 20,
+                "photos": [
+                    {
+                        "photo": {
+                            "id": "u_k4NjA3Njk0NTkw",
+                            "url": "https://b.zmtcdn.com/data/reviews_photos/058/f229f6ee51a378e2bcfbe09ea4a61058_1568819473.jpg",
+                            "thumb_url": "https://b.zmtcdn.com/data/reviews_photos/058/f229f6ee51a378e2bcfbe09ea4a61058_1568819473.jpg?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A",
+                            "user": {
+                                "name": "Saurabh Chauhan",
+                                "zomato_handle": "saurabh_sc01",
+                                "foodie_level": "Connoisseur",
+                                "foodie_level_num": 12,
+                                "foodie_color": "e95151",
+                                "profile_url": "https://www.zomato.com/saurabh_sc01?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                                "profile_image": "https://b.zmtcdn.com/data/user_profile_pictures/831/493cdd68c7ca8d8fac36bb0245a10831.jpg?fit=around%7C100%3A100&crop=100%3A100%3B%2A%2C%2A",
+                                "profile_deeplink": "zomato://u/7556591"
+                            },
+                            "res_id": 19195803,
+                            "caption": "",
+                            "timestamp": 1568819474,
+                            "friendly_time": "yesterday",
+                            "width": 864,
+                            "height": 1152
+                        }
+                    },
+                    {
+                        "photo": {
+                            "id": "u_QwMzE3OTMwMzY1",
+                            "url": "https://b.zmtcdn.com/data/reviews_photos/6d0/5b41669fcaf2467dfaf85c24ecd756d0_1568819474.jpg",
+                            "thumb_url": "https://b.zmtcdn.com/data/reviews_photos/6d0/5b41669fcaf2467dfaf85c24ecd756d0_1568819474.jpg?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A",
+                            "user": {
+                                "name": "Saurabh Chauhan",
+                                "zomato_handle": "saurabh_sc01",
+                                "foodie_level": "Connoisseur",
+                                "foodie_level_num": 12,
+                                "foodie_color": "e95151",
+                                "profile_url": "https://www.zomato.com/saurabh_sc01?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                                "profile_image": "https://b.zmtcdn.com/data/user_profile_pictures/831/493cdd68c7ca8d8fac36bb0245a10831.jpg?fit=around%7C100%3A100&crop=100%3A100%3B%2A%2C%2A",
+                                "profile_deeplink": "zomato://u/7556591"
+                            },
+                            "res_id": 19195803,
+                            "caption": "",
+                            "timestamp": 1568819474,
+                            "friendly_time": "yesterday",
+                            "width": 864,
+                            "height": 1152
+                        }
+                    },
+                    {
+                        "photo": {
+                            "id": "u_MzMyNDY2MzA2MT",
+                            "url": "https://b.zmtcdn.com/data/reviews_photos/8aa/ca7b63d461acf35348f04100d422d8aa_1568819472.jpg",
+                            "thumb_url": "https://b.zmtcdn.com/data/reviews_photos/8aa/ca7b63d461acf35348f04100d422d8aa_1568819472.jpg?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A",
+                            "user": {
+                                "name": "Saurabh Chauhan",
+                                "zomato_handle": "saurabh_sc01",
+                                "foodie_level": "Connoisseur",
+                                "foodie_level_num": 12,
+                                "foodie_color": "e95151",
+                                "profile_url": "https://www.zomato.com/saurabh_sc01?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                                "profile_image": "https://b.zmtcdn.com/data/user_profile_pictures/831/493cdd68c7ca8d8fac36bb0245a10831.jpg?fit=around%7C100%3A100&crop=100%3A100%3B%2A%2C%2A",
+                                "profile_deeplink": "zomato://u/7556591"
+                            },
+                            "res_id": 19195803,
+                            "caption": "",
+                            "timestamp": 1568819472,
+                            "friendly_time": "yesterday",
+                            "width": 864,
+                            "height": 1152
+                        }
+                    }
+                ],
+                "menu_url": "https://www.zomato.com/mumbai/slay-coffee-mahakali/menu?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1&openSwipeBox=menu&showMinimal=1#tabtop",
+                "featured_image": "https://b.zmtcdn.com/data/pictures/chains/7/19188447/18a0ce6806a89784e167bd2cb41856fe.jpg?output-format=webp",
+                "has_online_delivery": 1,
+                "is_delivering_now": 1,
+                "include_bogo_offers": true,
+                "deeplink": "zomato://restaurant/19195803",
+                "order_url": "https://www.zomato.com/mumbai/slay-coffee-mahakali/order?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                "order_deeplink": "",
+                "is_table_reservation_supported": 0,
+                "has_table_booking": 0,
+                "events_url": "https://www.zomato.com/mumbai/slay-coffee-mahakali/events#tabtop?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                "phone_numbers": "+91 7400437226, +91 7400437232",
+                "all_reviews": {
+                    "reviews": [
+                        {
+                            "review": {
+                                "rating": 5,
+                                "review_text": "",
+                                "id": 45158268,
+                                "rating_color": "305D02",
+                                "review_time_friendly": "18 hours ago",
+                                "rating_text": "Insane!",
+                                "timestamp": 1568892445,
+                                "likes": 0,
+                                "user": {
+                                    "name": "Radhika",
+                                    "foodie_level": "Foodie",
+                                    "foodie_level_num": 2,
+                                    "foodie_color": "ffd35d",
+                                    "profile_url": "https://www.zomato.com/users/radhika-29926888?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                                    "profile_image": "https://b.zmtcdn.com/images/user_avatars/mug_2x.png?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A",
+                                    "profile_deeplink": "zomato://u/29926888"
+                                },
+                                "comments_count": 0
+                            }
+                        },
+                        {
+                            "review": {
+                                "rating": 4,
+                                "review_text": "This is online coffee delivery outlet. Its serves finest coffee at your doorstep. They have some cool options in coffee. The coffee comes in really cool pack. Which maintains the temperature for quite a long time the packaging looks quite fancy and the the coffee is packed nicely spill proof. Tried it's:- Hazlenut latte Madras mud coffee Loved the Hazlenut latte more try that. Madras mud coffeez was good enough. Coffee lovers must try out thia place. The pricing is quite decent and pocket friendly.",
+                                "id": 45143590,
+                                "rating_color": "5BA829",
+                                "review_time_friendly": "yesterday",
+                                "rating_text": "Great!",
+                                "timestamp": 1568819469,
+                                "likes": 0,
+                                "user": {
+                                    "name": "Saurabh Chauhan",
+                                    "zomato_handle": "saurabh_sc01",
+                                    "foodie_level": "Connoisseur",
+                                    "foodie_level_num": 12,
+                                    "foodie_color": "e95151",
+                                    "profile_url": "https://www.zomato.com/saurabh_sc01?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                                    "profile_image": "https://b.zmtcdn.com/data/user_profile_pictures/831/493cdd68c7ca8d8fac36bb0245a10831.jpg?fit=around%7C100%3A100&crop=100%3A100%3B%2A%2C%2A",
+                                    "profile_deeplink": "zomato://u/7556591"
+                                },
+                                "comments_count": 0
+                            }
+                        },
+                        {
+                            "review": {
+                                "rating": 5,
+                                "review_text": "They have really lot of variety in coffee . Their packaging is totally incredible . Price is also normal not very much high . This restaurant has many outlets so it's profitable for us as customers to try such places.",
+                                "id": 45102245,
+                                "rating_color": "305D02",
+                                "review_time_friendly": "4 days ago",
+                                "rating_text": "Insane!",
+                                "timestamp": 1568643129,
+                                "likes": 0,
+                                "user": {
+                                    "name": "Neha Dangwani",
+                                    "foodie_level": "Big Foodie",
+                                    "foodie_level_num": 7,
+                                    "foodie_color": "ffae4f",
+                                    "profile_url": "https://www.zomato.com/users/neha-dangwani-99173129?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                                    "profile_image": "https://b.zmtcdn.com/data/user_profile_pictures/79e/05a5a2373a8e052fe5929c7f5e96679e.jpg?fit=around%7C100%3A100&crop=100%3A100%3B%2A%2C%2A",
+                                    "profile_deeplink": "zomato://u/99173129"
+                                },
+                                "comments_count": 0
+                            }
+                        },
+                        {
+                            "review": {
+                                "rating": 5,
+                                "review_text": "Absolutely fantastic!! PACKAGING - FULL MARKS!Recommendation: Madras Mud, Cafe Latte.The most recent coffee brand to hit the Mumbai shores is the Slay Coffee brand and boy, they are good. Not only their delivery is quick, but it's also served in a thermal box making sure the coffee remains warm, if not hot when served to you. The quantity is sufficient for one person, so is the price. DEFINITELY WORTH A TRY!!!",
+                                "id": 45096786,
+                                "rating_color": "305D02",
+                                "review_time_friendly": "4 days ago",
+                                "rating_text": "Insane!",
+                                "timestamp": 1568626668,
+                                "likes": 0,
+                                "user": {
+                                    "name": "Rushabh Shah",
+                                    "zomato_handle": "rshah",
+                                    "foodie_level": "Connoisseur",
+                                    "foodie_level_num": 13,
+                                    "foodie_color": "e95151",
+                                    "profile_url": "https://www.zomato.com/rshah?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                                    "profile_image": "https://b.zmtcdn.com/data/user_profile_pictures/61a/8b3cc5267ca4cedcfab25c179699461a.jpg?fit=around%7C100%3A100&crop=100%3A100%3B%2A%2C%2A",
+                                    "profile_deeplink": "zomato://u/1164981"
+                                },
+                                "comments_count": 0
+                            }
+                        },
+                        {
+                            "review": {
+                                "rating": 5,
+                                "review_text": "",
+                                "id": 45067269,
+                                "rating_color": "305D02",
+                                "review_time_friendly": "5 days ago",
+                                "rating_text": "Insane!",
+                                "timestamp": 1568527234,
+                                "likes": 0,
+                                "user": {
+                                    "name": "Praveen Gowda",
+                                    "foodie_level": "Foodie",
+                                    "foodie_level_num": 2,
+                                    "foodie_color": "ffd35d",
+                                    "profile_url": "https://www.zomato.com/users/praveen-gowda-95658486?utm_source=api_basic_user&utm_medium=api&utm_campaign=v2.1",
+                                    "profile_image": "https://b.zmtcdn.com/images/user_avatars/pizza_2x.png?fit=around%7C200%3A200&crop=200%3A200%3B%2A%2C%2A",
+                                    "profile_deeplink": "zomato://u/95658486"
+                                },
+                                "comments_count": 0
+                            }
+                        }
+                    ]
+                },
+                "establishment": [
+                    "Quick Bites"
+                ],
+                "establishment_types": []
+            }
+        },
+     }]
+}
+
+##############################################################################################################################################
+API Name: Food Menu Details
+Description: Food Menu List
+URL: /food-menu-list/?res_id=19195803
+GET/POST/PUT/DELETE: GET
+Headers (with Sample): 
+ 	{
+	    'authorization': "Token b5d48f63d3d5039011d818494f2e163016c322eb",
+	    'content-type': "application/json",
+    }
+Body (for post - with Sample): -
+Response:
+{
+    "menu_details": [
+        {
+            "id": 241,
+            "name": "Salted Fries",
+            "price": "89.00",
+            "description": ""
+        },
+        {
+            "id": 242,
+            "name": "Piri Piri Fries",
+            "price": "99.00",
+            "description": ""
+        },
+    ]
+}
+
+###########################################################################################################################
+API Name: Cart Details
+Description: Cart Add and List Functionality
+URL: /cart/
+GET/POST/PUT/DELETE: GET, POST
+Headers (with Sample): 
+ 	{
+	    'authorization': "Token b5d48f63d3d5039011d818494f2e163016c322eb",
+	    'content-type': "application/json",
+    }
+Body (for post - with Sample): 
+{
+	
+	"data":[ {
+		"product_id": 411,
+		"quantity": 1
+	},
+	{	"product_id": 412,
+		"quantity": 1}
+	],
+	"restaurant": 19195803
+	
+}
+Response for GET:
+{
+    "cart": [
+        {
+            "name": "Organic Filter Coffee",
+            "unit_price": 30,
+            "price": 30,
+            "quantity": 1
+        },
+        {
+            "name": "Hazelnut Filter Coffee",
+            "unit_price": 50,
+            "price": 50,
+            "quantity": 1
+        }
+    ],
+    "cart_id": 24,
+    "total_price": 80
+}
+
+Response for POST:
+{
+    "cart": 24
+}
+
+#################################################################################################################################
+API Name: Order Details
+Description: Place order and fetch older oreder list functionality
+URL: /orders/
+GET/POST/PUT/DELETE: GET, POST
+Headers (with Sample): 
+ 	{
+	    'authorization': "Token b5d48f63d3d5039011d818494f2e163016c322eb",
+	    'content-type': "application/json",
+    }
+Body (for post - with Sample): 
+{
+	"cart_id": 23
+}
+Response for GET:
+{
+    "order_page": "active",
+    "order": [
+        {
+            "id": 19,
+            "name": "Chinese Schezwan",
+            "unit_price": 109,
+            "price": 218,
+            "quantity": 2
+        },
+        {
+            "id": 18,
+            "name": "Salted Fries",
+            "unit_price": 89,
+            "price": 89,
+            "quantity": 1
+        }
+    ],
+    "total_price": 1575
+}
+
+Response for POST:
+{
+    "order": [
+        {
+            "id": 19,
+            "name": "Chinese Schezwan",
+            "unit_price": 109,
+            "price": 218,
+            "quantity": 2
+        }
+    ],
+    "total_price": 218
+}
+
+
+
+
+
+

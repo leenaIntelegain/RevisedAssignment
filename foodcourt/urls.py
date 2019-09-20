@@ -43,6 +43,7 @@ urlpatterns = [
     url(r'^foodcourt/users', user_authenticate, name='user_authenticate'), 
     url(r'^foodcourt/logout', logout, name='logout'),
 
+    url('api/login', login),
     url(
         r'restaurant-search/$',
         RestaurantList.as_view(),
@@ -52,5 +53,17 @@ urlpatterns = [
         r'food-menu-list/$',
         FoodMenuList.as_view(),
         name='food-menu-list'
+    ),
+
+    url(
+        r'orders/$',
+        OrderView.as_view(),
+        name='orders'
+    ),
+
+    url(
+        r'cart/$',
+        CartView.as_view(),
+        name='cart'
     ),
 ]

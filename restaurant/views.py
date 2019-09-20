@@ -16,6 +16,14 @@ from rest_framework.renderers import TemplateHTMLRenderer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.conf import settings
+from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authtoken.models import Token
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.status import (
+    HTTP_400_BAD_REQUEST,
+    HTTP_404_NOT_FOUND,
+    HTTP_200_OK
+)
 
 
 # Signup View
@@ -53,6 +61,7 @@ def user_authenticate(request):
         if user is not None:
             # correct username and password login the user
             auth.login(request, user)
+            # token, _ = Token.objects.get_or_create(user=user)
             return redirect('foodcourt')
  
         else:
@@ -104,84 +113,6 @@ def order_details(request):
         total_price += order.total_price
     context = {"order_page": "active", 'order':obj,'total_price': total_price}    
     return render(request, 'order_details.html', context)
-
-class RestaurantList(APIView):
-    # renderer_classes = [TemplateHTMLRenderer]
-    # template_name = 'foodcourt.html'
-
-    def get(self, request):
-        current_page = request.GET.get('page',1)
-        offset = (int(current_page) - 1) * 5 + 1
-
-        url = "https://developers.zomato.com/api/v2.1/search"
-        querystring = {
-            "q":request.GET['search'],
-            "start": offset,
-            "count": 5
-        }
-
-        headers = {
-            'user-key': settings.ZOMATO_KEY,
-            'content-type': "application/json"
-        }
-
-        response = requests.request("GET", url, headers=headers, params=querystring)
-        data = json.loads(response.text)
-
-        total_pages = data['results_found'] / 5
-        
-        pagination = {
-            'total_pages': round(total_pages),
-            'current_page': current_page,
-            'next': int(current_page)+1,
-            'search': request.GET['search'], 
-            'previous': int(current_page)-1
-        }
-
-        if  data['results_found'] % 5 != 0:
-
-            total_pages += 1 # adding one more page if the last page will contains less contacts 
-
-            pagination = {
-                'total_pages': round(total_pages),
-                'current_page': current_page,
-                'next': int(current_page)+1,
-                'search': request.GET['search'],
-                'previous': int(current_page)-1
-            }
-        if data['code'] == 200:
-            return Response({"restaurants":data['restaurants'], 'pagination': pagination})
-
-        return Response(data)
-
-class FoodMenuList(APIView):
-    # renderer_classes = [TemplateHTMLRenderer]
-    # template_name = 'restaurant_details.html'
-
-    def get(self, request):
-        current_page = request.GET.get('page' ,1)
-        limit = 5 * current_page
-        offset = limit - 5
-
-        url = "https://developers.zomato.com/api/v2.1/restaurant"
-        querystring = {
-            "res_id":request.GET['res_id'],
-        }
-        headers = {
-            'user-key': settings.ZOMATO_KEY,
-            'content-type': "application/json"
-        }
-
-        response = requests.request("GET", url, headers=headers, params=querystring)
-        menu_list = Dish.objects.filter(restaurant=1)
-        serializer = DishSerializer(
-                Dish.objects.filter(restaurant=1), many=True
-            )
-        data = json.loads(response.text)
-        if data['code'] == 200:
-            return Response({"menu_details":serializer.data,"restaurant": data['name'],"restaurant_id":request.GET['res_id']})
-            
-        return Response(data)
 
 # Search Restaurants View
 def search_restaurants(request):
@@ -255,23 +186,6 @@ def get_foodmenu_details(request):
 
     return render(request, 'restaurant_details.html',{"menu_details":serializer.data,"restaurant": data['name'],"restaurant_id":request.GET['res_id']})
 
-# def get_restaurant(request):
-#     """View function for get Restaurant."""
-#     # Render the HTML template index.html with the data in the context variable
-   
-#     url = "https://developers.zomato.com/api/v2.1/restaurant"
-#     querystring = {
-#         "res_id":request.GET['res_id'],
-#     }
-#     headers = {
-#         'user-key': "84fd63575a12f6a5537b8cf51215dca3",
-#         'content-type': "application/json"
-#     }
-
-#     response = requests.request("GET", url, headers=headers, params=querystring)
-#     data = json.loads(response.text)
-    
-#     return render(request, 'restaurant_details.html',{"restaurant_details":data})
 
 # Add items into the cart
 @csrf_exempt
@@ -378,3 +292,231 @@ def place_order(request, cart_id):
         return render(request, 'cart_details.html', {'cart': obj})
     context = {"order_page": "active", 'order': obj, 'total_price': order.total_price}
     return render(request, 'order_details.html', context)
+
+
+##############Rest API's ###############################################    
+
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def login(request):
+    username = request.data.get("username")
+    password = request.data.get("password")
+    if username is None or password is None:
+        return Response({'error': 'Please provide both username and password'},
+                        status=HTTP_400_BAD_REQUEST)
+    user = auth.authenticate(username=username, password=password)
+    if not user:
+        return Response({'error': 'Invalid Credentials'},
+                        status=HTTP_404_NOT_FOUND)
+    token, _ = Token.objects.get_or_create(user=user)
+    return Response({'token': token.key},
+                    status=HTTP_200_OK)
+
+class CartView(APIView):
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'foodcourt.html'
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        obj = []
+        try:
+            try:
+                cart = Cart.objects.get(id=request.GET['cart_id'])
+                for i in cart.cart_item.all():
+                    obj.append({
+                        "name": i.items.name,
+                        "unit_price": i.items.price,
+                        "price": i.price,
+                        "quantity": i.quantity
+                        })
+            except Cart.DoesNotExist:
+                return Response({"Cart is empty!!!"},status=HTTP_400_BAD_REQUEST)
+        except:
+            try:
+                cart = Cart.objects.get(user=request.user)
+                for i in cart.cart_item.all():
+                    obj.append({
+                        "name": i.items.name,
+                        "unit_price": i.items.price,
+                        "price": i.price,
+                        "quantity": i.quantity
+                        })
+            except Cart.DoesNotExist:
+                return Response({"Cart is empty!!!"},status=HTTP_400_BAD_REQUEST)
+        context = {'cart': obj,'cart_id': cart.id,'total_price': cart.total_price}
+
+        return Response(context)
+
+    def post(self, request):
+        obj = []
+        total_price = 0
+        body = json.loads(request.body)
+
+        products = body['data']
+        restaurant = body['restaurant']
+
+        cart,created = Cart.objects.get_or_create(user=request.user)
+        if not created:
+            if cart.restaurant != restaurant:
+                cart.cart_item.all().delete()
+
+        for p in products:
+            product = get_object_or_404(Dish, id=p['product_id'])
+            cart_item, created = CartItems.objects.get_or_create(
+                                user=request.user,
+                                items=product)
+            if not created:
+                cart_item.quantity = cart_item.quantity+int(p['quantity']) if cart_item.quantity != None else int(p['quantity'])
+                cart_item.cart = cart
+                cart_item.save()
+            else:
+                cart_item.quantity = int(p['quantity'])
+                cart_item.cart = cart
+                cart_item.save()
+
+            cart_item.price = cart_item.quantity * product.price
+            cart_item.save()
+            
+        for i in cart.cart_item.all():
+            total_price += i.price
+        cart.total_price = total_price
+        cart.restaurant = restaurant
+        cart.save()
+
+        return Response({'cart': cart.id},
+                    status=HTTP_200_OK)
+
+class OrderView(APIView):
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'foodcourt.html'
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        obj = []
+        total_price = 0
+        orders = Order.objects.filter(user=request.user).order_by('-id')
+        for order in orders:
+            for i in order.order_item.all():     
+                obj.append({
+                    "id": order.id,
+                    "name": i.items.name,
+                    "unit_price": i.items.price,
+                    "price": i.price,
+                    "quantity": i.quantity
+                    })
+            total_price += order.total_price
+        context = {"order_page": "active", 'order':obj,'total_price': total_price}   
+
+        return Response(context)
+
+    def post(self, request):
+        data = json.loads(request.body)
+        obj =[]
+        try:
+            cart = Cart.objects.get(id=data['cart_id'])
+            order = Order.objects.create(user=request.user,order_date=date.today(),total_price=cart.total_price, restaurant=cart.restaurant)
+
+            for i in cart.cart_item.all():
+                OrderItems.objects.create(
+                                    user=request.user,
+                                    items=i.items,
+                                    order=order,
+                                    quantity=i.quantity,
+                                    price=i.price)
+
+            cart.cart_item.all().delete()
+            cart.delete()
+            for i in order.order_item.all():     
+                obj.append({
+                    "id": order.id,
+                    "name": i.items.name,
+                    "unit_price": i.items.price,
+                    "price": i.price,
+                    "quantity": i.quantity
+                    })
+            messages.success(request, 'Your Order Plcaed Successfully!!!!!')
+        except Cart.DoesNotExist:
+            return Response({"There are no items to placed."},status=HTTP_400_BAD_REQUEST)
+
+        context = {'order': obj, 'total_price': order.total_price}  
+
+        return Response(context)
+
+class RestaurantList(APIView):
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'foodcourt.html'
+
+    def get(self, request):
+        current_page = request.GET.get('page',1)
+        offset = (int(current_page) - 1) * 5 + 1
+
+        url = "https://developers.zomato.com/api/v2.1/search"
+        querystring = {
+            "q":request.GET['search'],
+            "start": offset,
+            "count": 5
+        }
+
+        headers = {
+            'user-key': settings.ZOMATO_KEY,
+            'content-type': "application/json"
+        }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        data = json.loads(response.text)
+
+        total_pages = data['results_found'] / 5
+        
+        pagination = {
+            'total_pages': round(total_pages),
+            'current_page': current_page,
+            'next': int(current_page)+1,
+            'search': request.GET['search'], 
+            'previous': int(current_page)-1
+        }
+
+        if  data['results_found'] % 5 != 0:
+
+            total_pages += 1 # adding one more page if the last page will contains less contacts 
+
+            pagination = {
+                'total_pages': round(total_pages),
+                'current_page': current_page,
+                'next': int(current_page)+1,
+                'search': request.GET['search'],
+                'previous': int(current_page)-1
+            }
+        try:
+            return Response({"restaurants":data['restaurants'], 'pagination': pagination})
+        except:
+            return Response(data)
+
+class FoodMenuList(APIView):
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'restaurant_details.html'
+
+    def get(self, request):
+        current_page = request.GET.get('page' ,1)
+        limit = 5 * current_page
+        offset = limit - 5
+
+        url = "https://developers.zomato.com/api/v2.1/restaurant"
+        querystring = {
+            "res_id":request.GET['res_id'],
+        }
+        headers = {
+            'user-key': settings.ZOMATO_KEY,
+            'content-type': "application/json"
+        }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        menu_list = Dish.objects.filter(restaurant=1)
+        serializer = DishSerializer(
+                Dish.objects.filter(restaurant=1), many=True
+            )
+        data = json.loads(response.text)
+        try:
+            return Response({"menu_details":serializer.data,"restaurant": data['name'],"restaurant_id":request.GET['res_id']})
+        except:
+            return Response(data)

@@ -44,6 +44,7 @@ urlpatterns = [
     url(r'^foodcourt/logout', logout, name='logout'),
 
     url('api/login', login),
+    url('api/signup', signup),
     url(
         r'restaurant-search/$',
         RestaurantList.as_view(),

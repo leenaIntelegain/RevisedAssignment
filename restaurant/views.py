@@ -314,6 +314,34 @@ def login(request):
     return Response({'token': token.key},
                     status=HTTP_200_OK)
 
+@csrf_exempt
+@api_view(["POST"])
+@permission_classes((AllowAny,))
+def signup(request):
+    errors = {}
+    if not request.data.get('email'):
+        errors = {'email':'Email is required'}
+    elif not request.data.get('password1'):
+        errors = {'email':'password is required'}
+    if User.objects.filter(email=request.data.get('email')).count():
+        errors = {'email':'Email already exist'}
+    elif request.data.get('password1') != request.data.get('password2'):
+        errors = {'password':'Password not matched'}
+    else:
+        user = User.objects.create(email= request.data.get('email'), username= str(request.data.get('email')))
+        user.set_password(request.data.get('password1'))
+        user.save()
+        user1 = auth.authenticate(username=request.data.get('email'), password=request.data.get('password1'))
+        if user1 is not None:
+            # correct username and password login the user
+            auth.login(request, user1)
+            token, _ = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key},
+                    status=HTTP_200_OK)
+    return Response(errors,
+                        status=HTTP_400_BAD_REQUEST)
+
+
 class DishListView(generics.ListAPIView):
     """
     Endpoint for current user creator list

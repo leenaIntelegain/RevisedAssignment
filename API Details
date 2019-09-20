@@ -18,6 +18,27 @@ Response:
 }
 
 #############################################################################################################################
+API Name: Signup
+Description: User Creation
+URL: /api/signup
+GET/POST/PUT/DELETE: POST
+Headers (with Sample): 
+	{
+    	'content-type': "application/json"
+    }
+Body (for post - with Sample): 
+	{
+		"username": "pranali.k@intelegain.com",
+		"password1": "admin@123",
+		"password2": "admin@123"
+	}
+
+Response:
+{
+    "token": "b5d48f63d3d5039011d818494f2e163016c322eb"
+}
+
+#############################################################################################################################
 API Name: Restaurant Search
 Description: Restaurant search using third part api "https://developers.zomato.com/api/v2.1/restaurant"
 URL: /restaurant-search?search=coffee&page=1

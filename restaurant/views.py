@@ -12,6 +12,10 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, HttpResponseBadRequest
+from rest_framework.renderers import TemplateHTMLRenderer
+from rest_framework.response import Response
+from rest_framework.views import APIView
+from django.conf import settings
 
 
 # Signup View
@@ -101,6 +105,84 @@ def order_details(request):
     context = {"order_page": "active", 'order':obj,'total_price': total_price}    
     return render(request, 'order_details.html', context)
 
+class RestaurantList(APIView):
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'foodcourt.html'
+
+    def get(self, request):
+        current_page = request.GET.get('page',1)
+        offset = (int(current_page) - 1) * 5 + 1
+
+        url = "https://developers.zomato.com/api/v2.1/search"
+        querystring = {
+            "q":request.GET['search'],
+            "start": offset,
+            "count": 5
+        }
+
+        headers = {
+            'user-key': settings.ZOMATO_KEY,
+            'content-type': "application/json"
+        }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        data = json.loads(response.text)
+
+        total_pages = data['results_found'] / 5
+        
+        pagination = {
+            'total_pages': round(total_pages),
+            'current_page': current_page,
+            'next': int(current_page)+1,
+            'search': request.GET['search'], 
+            'previous': int(current_page)-1
+        }
+
+        if  data['results_found'] % 5 != 0:
+
+            total_pages += 1 # adding one more page if the last page will contains less contacts 
+
+            pagination = {
+                'total_pages': round(total_pages),
+                'current_page': current_page,
+                'next': int(current_page)+1,
+                'search': request.GET['search'],
+                'previous': int(current_page)-1
+            }
+        if data['code'] == 200:
+            return Response({"restaurants":data['restaurants'], 'pagination': pagination})
+
+        return Response(data)
+
+class FoodMenuList(APIView):
+    # renderer_classes = [TemplateHTMLRenderer]
+    # template_name = 'restaurant_details.html'
+
+    def get(self, request):
+        current_page = request.GET.get('page' ,1)
+        limit = 5 * current_page
+        offset = limit - 5
+
+        url = "https://developers.zomato.com/api/v2.1/restaurant"
+        querystring = {
+            "res_id":request.GET['res_id'],
+        }
+        headers = {
+            'user-key': settings.ZOMATO_KEY,
+            'content-type': "application/json"
+        }
+
+        response = requests.request("GET", url, headers=headers, params=querystring)
+        menu_list = Dish.objects.filter(restaurant=1)
+        serializer = DishSerializer(
+                Dish.objects.filter(restaurant=1), many=True
+            )
+        data = json.loads(response.text)
+        if data['code'] == 200:
+            return Response({"menu_details":serializer.data,"restaurant": data['name'],"restaurant_id":request.GET['res_id']})
+            
+        return Response(data)
+
 # Search Restaurants View
 def search_restaurants(request):
     """View function for Search Restaurant."""
@@ -115,7 +197,7 @@ def search_restaurants(request):
         "count": 5
     }
     headers = {
-        'user-key': "84fd63575a12f6a5537b8cf51215dca3",
+        'user-key': settings.ZOMATO_KEY,
         'content-type': "application/json"
     }
 

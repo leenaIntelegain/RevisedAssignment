@@ -42,4 +42,15 @@ urlpatterns = [
     url(r'^foodcourt/login', user_login, name='user_login'),
     url(r'^foodcourt/users', user_authenticate, name='user_authenticate'), 
     url(r'^foodcourt/logout', logout, name='logout'),
+
+    url(
+        r'restaurant-search/$',
+        RestaurantList.as_view(),
+        name='restaurant-search'
+    ),
+    url(
+        r'food-menu-list/$',
+        FoodMenuList.as_view(),
+        name='food-menu-list'
+    ),
 ]
